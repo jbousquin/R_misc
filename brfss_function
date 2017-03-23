@@ -1,0 +1,15 @@
+#script to read is BRFSS data (SAS export .xpt)
+
+install.packages("Hmisc")
+library(Hmisc)
+
+dir = "L:/Public/jbousqui/GED/GIS/HWBI/BRFSS/Tabular/"
+
+for(i in 1984:2015){
+  print(i)
+}
+  
+dataset_lst = c()
+setwd("L:/Public/jbousqui/GED/GIS/HWBI/BRFSS/Tabular")
+fileName <- "CDBRFS09.XPT"
+mydata <-sasxport.get(fileName)
