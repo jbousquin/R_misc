@@ -26,4 +26,48 @@ for(year in 2006:2010){
 
 #read from .xpt
 BRFSS_09 <- sasxport.get(download_BRFSS("09"))
-#subset
+#How well prepared do you feel your household is to handle a large-scale disaster or emergency?
+#1 = Well prepared
+#2 = Somewhat prepared
+#3 = Not prepared at all
+#7 = Don't know/Not Sure
+#9 = Refused
+prep = "gpwelpr3"
+#Does your household have a 3-day supply of prescription medication for each person who takes prescribed medicines?
+#1 = Yes
+#2 = No
+#3 = No one in household requires prescribed medicine 
+#7 = Don't know/Not Sure
+#9 = Refused
+meds = "gp3dyprs"
+#If public authorities announced a mandatory evacuation from your community due to a  large-scale disaster or emergency, would you evacuate?
+#1 = Yes
+#2 = No
+#7 = Don't know/Not Sure
+#9 = Refused
+evac = "gpmndevc"
+
+#pull out data
+#state, geo
+BRFSS_09[1:2]
+#county 999= reduced, 777 = Don't know/Not sure
+BRFSS_09$ctycode
+#fields
+codes = c(prep, meds, evac)
+for(code in codes){
+  print (code)
+  #look for columns
+  if(code%in% colnames(BRFSS_09)){
+    print("working")
+  }
+}
+
+
+setwd("L:/Public/jbousqui/GED/GIS/HWBI/BRFSS/Tabular")
+fileName <- "CDBRFS09.XPT"
+mydata <-sasxport.get(fileName)
+
+mydata <-sasxport.get(unz(zipF, "xptF"))
+
+
+https://www.cdc.gov/brfss/annual_data/2009/files/CDBRFS09XPT.ZIP
