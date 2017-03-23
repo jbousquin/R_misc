@@ -3,13 +3,27 @@
 install.packages("Hmisc")
 library(Hmisc)
 
-dir = "L:/Public/jbousqui/GED/GIS/HWBI/BRFSS/Tabular/"
-
-for(i in 1984:2015){
-  print(i)
+#functions
+download_BRFSS <- function(year){
+  temp = tempfile()
+  zipF = paste("CDBRFS", year, "XPT.ZIP", sep = "")
+  #https://www.cdc.gov/brfss/annual_data/2009/files/CDBRFS09XPT.ZIP
+  url = paste("https://www.cdc.gov/brfss/annual_data/20", year, "/files/", zipF, sep = "")
+  download.file(url, zipF, mode = "wb")
+  dataset = unzip(zipF)
+  #download.file(url, temp, mode = "wb")
+  #dataset = unzip(temp)
+  return(dataset)
 }
-  
-dataset_lst = c()
+
+#set where files are saved
 setwd("L:/Public/jbousqui/GED/GIS/HWBI/BRFSS/Tabular")
-fileName <- "CDBRFS09.XPT"
-mydata <-sasxport.get(fileName)
+
+#cycle through survey years (all = 1984:2015)
+for(year in 2006:2010){
+  print(year)
+}
+
+#read from .xpt
+BRFSS_09 <- sasxport.get(download_BRFSS("09"))
+#subset
