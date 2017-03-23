@@ -16,6 +16,16 @@ download_BRFSS <- function(year){
   return(dataset)
 }
 
+add_exist_col <- function(dataset, code){
+  #look for columns, if exists return
+  if(code%in% colnames(dataset)){
+    print(c("Adding ", toString(code)))
+    return(dataset[[eval(code)]])
+  } else {
+    print(c(toString(code)," not found in ", toString(dataset)))
+    }
+}
+
 #set where files are saved
 setwd("L:/Public/jbousqui/GED/GIS/HWBI/BRFSS/Tabular")
 
@@ -26,6 +36,8 @@ for(year in 2006:2010){
 
 #read from .xpt
 BRFSS_09 <- sasxport.get(download_BRFSS("09"))
+#county 999= reduced, 777 = Don't know/Not sure
+city = "ctycode"
 #How well prepared do you feel your household is to handle a large-scale disaster or emergency?
 #1 = Well prepared
 #2 = Somewhat prepared
@@ -47,27 +59,22 @@ meds = "gp3dyprs"
 #9 = Refused
 evac = "gpmndevc"
 
-#pull out data
-#state, geo
-BRFSS_09[1:2]
-#county 999= reduced, 777 = Don't know/Not sure
-BRFSS_09$ctycode
 #fields
-codes = c(prep, meds, evac)
+codes = c(city, prep, meds, evac)
+
+#pull out datatable state & geo
+temp_matrix = BRFSS_09[1:2]
+
+#add columns to matrix for codes
 for(code in codes){
-  print (code)
-  #look for columns
-  if(code%in% colnames(BRFSS_09)){
-    print("working")
-  }
+  temp_matrix[[code]] <- add_exist_col(BRFSS_09, code)
 }
+#NOT WORKING
+write.csv(temp_matrix, "BRFSS_09.csv")
 
-
+#NOTES
 setwd("L:/Public/jbousqui/GED/GIS/HWBI/BRFSS/Tabular")
 fileName <- "CDBRFS09.XPT"
 mydata <-sasxport.get(fileName)
-
 mydata <-sasxport.get(unz(zipF, "xptF"))
-
-
 https://www.cdc.gov/brfss/annual_data/2009/files/CDBRFS09XPT.ZIP
