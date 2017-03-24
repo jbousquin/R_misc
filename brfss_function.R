@@ -6,9 +6,9 @@ library(Hmisc)
 ###FUNCTIONS###
 download_BRFSS <- function(year){
   temp = tempfile()
-  zipF = paste("CDBRFS", year, "XPT.ZIP", sep = "")
+  zipF = paste("CDBRFS", substr(year, 3, 4), "XPT.ZIP", sep = "")
   #https://www.cdc.gov/brfss/annual_data/2009/files/CDBRFS09XPT.ZIP
-  url = paste("https://www.cdc.gov/brfss/annual_data/20", year, "/files/", zipF, sep = "")
+  url = paste("https://www.cdc.gov/brfss/annual_data/", year, "/files/", zipF, sep = "")
   download.file(url, zipF, mode = "wb")
   dataset = unzip(zipF)
   #download.file(url, temp, mode = "wb")
