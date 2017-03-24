@@ -19,14 +19,18 @@ download_BRFSS <- function(year){
 add_exist_col <- function(dataset, code){
   #look for columns, if exists return
   if(code%in% colnames(dataset)){
-    print(c("Adding ", toString(code)))
+    print(paste("Adding", toString(code), sep=" "))
     return(dataset[[eval(code)]])
   } else {
-    print(c(toString(code)," not found in ", toString(dataset)))
+    print(paste(toString(code),"not found in dataset", sep=" "))
+    return(NULL)
     }
 }
 
 ###EXECUTE###
+#set range of years
+rngYears = (2006:2010) #2006
+
 #set where files are saved
 setwd("L:/Public/jbousqui/GED/GIS/HWBI/BRFSS/Tabular")
 
@@ -39,7 +43,12 @@ city = "ctycode"
 #3 = Not prepared at all
 #7 = Don't know/Not Sure
 #9 = Refused
+#code used in 2008-2010
 prep = "gpwelpr3"
+#code used in 2007
+prep1 = "gpwelpr2"
+#code used in 2006
+prep2 = "gpwelprd"
 #Does your household have a 3-day supply of prescription medication for each person who takes prescribed medicines?
 #1 = Yes
 #2 = No
@@ -55,31 +64,16 @@ meds = "gp3dyprs"
 evac = "gpmndevc"
 
 #list of columns
-codes = c(city, prep, meds, evac)
+codes = c(city, prep, prep1, prep2, meds, evac)
 
 #cycle through survey years (all = 1984:2015)
-rngYears = c(2006, 2010)
 for(year in rngYears){
   fileName = paste("BRFSS_", year, ".csv", sep="")
-  print(fileName)
+  print(paste("Creating", fileName, sep = " "))
   temp_BRFSS <- sasxport.get(download_BRFSS(year))
   temp_matrix = temp_BRFSS[1:2]
   for(code in codes){
     temp_matrix[[code]] <- add_exist_col(temp_BRFSS, code)
   }
-  write.csv(temp_matrix, "fileName")
+  write.csv(temp_matrix, fileName)
 }
-
-#NOTES
-#read from .xpt
-#BRFSS_09 <- sasxport.get(download_BRFSS("09"))
-
-#pull out datatable state & geo
-#temp_matrix = BRFSS_09[1:2]
-
-#add columns to matrix for codes
-#for(code in codes){
-#  temp_matrix[[code]] <- add_exist_col(BRFSS_09, code)
-#}
-
-#write.csv(temp_matrix, "BRFSS_09.csv")
